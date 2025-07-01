@@ -25,7 +25,7 @@ export default async function HomePage() {
     },
   });
 
-  console.log(posts.docs);
+  // console.log(posts.docs);
 
   return (
     <div className="home">

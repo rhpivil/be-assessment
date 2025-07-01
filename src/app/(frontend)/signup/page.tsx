@@ -2,11 +2,15 @@
 
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function SignUpPage() {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,7 +25,13 @@ export default function SignUpPage() {
       });
 
       const responseJson = await response.json();
-      console.log(responseJson);
+
+      if (!response.ok) {
+        setErrorMessage(responseJson.errors[0].data.errors[0].message);
+      } else {
+        alert('Account is created!');
+        router.push('/login');
+      }
     } catch (error) {
       console.log(error);
     }
@@ -74,6 +84,7 @@ export default function SignUpPage() {
           </button>
         </div>
       </form>
+      {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
 }
