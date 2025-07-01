@@ -9,10 +9,12 @@ export default function SignUpPage() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
 
     try {
@@ -34,6 +36,8 @@ export default function SignUpPage() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,7 +88,9 @@ export default function SignUpPage() {
           </button>
         </div>
       </form>
+
       {errorMessage && <p>{errorMessage}</p>}
+      {loading && <p>Loading... Please wait</p>}
     </div>
   );
 }
