@@ -1,23 +1,35 @@
-import { headers as getHeaders } from 'next/headers.js'
-import Image from 'next/image'
-import { getPayload } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
+import { headers as getHeaders } from 'next/headers.js';
+import { getPayload } from 'payload';
+import React from 'react';
+import { fileURLToPath } from 'url';
 
-import config from '@/payload.config'
-import './styles.css'
+import config from '@/payload.config';
+import './styles.css';
+
+import { PostForm } from '../components/PostForm';
 
 export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
+  const headers = await getHeaders();
+  const payloadConfig = await config;
+  const payload = await getPayload({ config: payloadConfig });
+  const { user } = await payload.auth({ headers });
 
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`;
+
+  const posts = await payload.find({
+    collection: 'posts',
+    populate: {
+      users: {
+        name: true,
+      },
+    },
+  });
+
+  console.log(posts.docs);
 
   return (
     <div className="home">
-      <div className="content">
+      {/* <div className="content">
         <picture>
           <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg" />
           <Image
@@ -38,7 +50,7 @@ export default async function HomePage() {
           >
             Go to admin panel
           </a>
-          <a
+          <a     <p>{post.author.name}</p>
             className="docs"
             href="https://payloadcms.com/docs"
             rel="noopener noreferrer"
@@ -47,7 +59,27 @@ export default async function HomePage() {
             Documentation
           </a>
         </div>
+      </div> */}
+
+      <div className="content">
+        <h1>Hi {user ? user.name : 'Guest'}!</h1>
+
+        {user && <PostForm userId={user.id} />}
+
+        <h2 className="center-header">Blog Post List</h2>
+        {posts.docs.map((post) => (
+          <div key={post.id}>
+            <p>{post.title}</p>
+
+            {/* CHECK THIS! SHOULD CUSTOM API RES PAYLOAD?*/}
+            <p>{post.author.name}</p>
+
+            <p>{post.content}</p>
+            <p>{post.createdAt}</p>
+          </div>
+        ))}
       </div>
+
       <div className="footer">
         <p>Update this page by editing</p>
         <a className="codeLink" href={fileURL}>
@@ -55,5 +87,5 @@ export default async function HomePage() {
         </a>
       </div>
     </div>
-  )
+  );
 }
