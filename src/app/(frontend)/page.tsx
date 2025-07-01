@@ -72,7 +72,7 @@ export default async function HomePage() {
             <p>{post.title}</p>
 
             {/* CHECK THIS! SHOULD CUSTOM API RES PAYLOAD?*/}
-            <p>{post.author.name}</p>
+            {/* <p>{post.author.name}</p> */}
 
             <p>{post.content}</p>
             <p>{post.createdAt}</p>
