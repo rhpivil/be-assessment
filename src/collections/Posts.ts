@@ -4,7 +4,7 @@ export const Posts: CollectionConfig = {
   slug: 'posts',
   access: {
     read: () => true,
-    create: ({ req: { user }, data }) => {
+    create: ({ req: { user } }) => {
       return Boolean(user);
     },
   },
@@ -24,6 +24,39 @@ export const Posts: CollectionConfig = {
       type: 'relationship',
       relationTo: 'users',
       required: true,
+      access: {
+        read: ({ req: { user }, data }) => {
+          if (user && data?.author) {
+            return user.id == data.author;
+          }
+
+          return false;
+        },
+      },
     },
   ],
+  hooks: {
+    beforeValidate: [
+      ({ req, data }) => {
+        if (req.user) {
+          data!.author = req.user.id;
+        }
+        return data;
+      },
+    ],
+    afterRead: [
+      async ({ req, doc }) => {
+        if (doc.author) {
+          const user = await req.payload.findByID({
+            collection: 'users',
+            id: doc.author.id,
+          });
+
+          doc.author = user.name;
+        }
+
+        return doc;
+      },
+    ],
+  },
 };

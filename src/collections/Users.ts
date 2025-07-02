@@ -5,13 +5,22 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
   },
-  // TODO: LOOK AT REFRESH TOKEN
   auth: {
     maxLoginAttempts: 5,
     lockTime: 120 * 1000,
   },
   access: {
     create: () => true,
+    read: ({ req: { user } }) => {
+      if (user) {
+        return {
+          id: {
+            equals: user.id,
+          },
+        };
+      }
+      return false;
+    },
   },
   fields: [
     // Email added by default

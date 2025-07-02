@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState, ChangeEvent } from 'react';
 
-export const PostForm = ({ userId }: { userId: string }) => {
+export const PostForm = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -25,7 +25,7 @@ export const PostForm = ({ userId }: { userId: string }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, content, author: userId }),
+        body: JSON.stringify({ title, content }),
       });
 
       const responseJson = await response.json();

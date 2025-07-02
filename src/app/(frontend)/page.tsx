@@ -16,16 +16,8 @@ export default async function HomePage() {
 
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`;
 
-  const posts = await payload.find({
-    collection: 'posts',
-    populate: {
-      users: {
-        name: true,
-      },
-    },
-  });
-
-  // console.log(posts.docs);
+  const response = await fetch(`${process.env.BASE_URL}/api/posts`);
+  const posts = await response.json();
 
   return (
     <div className="home">
@@ -64,18 +56,14 @@ export default async function HomePage() {
       <div className="content">
         <h1>Hi {user ? user.name : 'Guest'}!</h1>
 
-        {user && <PostForm userId={user.id} />}
+        {user && <PostForm />}
 
         <h2 className="center-header">Blog Post List</h2>
         {posts.docs.map((post) => (
           <div key={post.id}>
-            <p>{post.title}</p>
-
-            {/* CHECK THIS! SHOULD CUSTOM API RES PAYLOAD?*/}
-            {/* <p>{post.author.name}</p> */}
-
-            <p>{post.content}</p>
-            <p>{post.createdAt}</p>
+            <p>Title: {post.title}</p>
+            {post.author && <p>Author: {post.author}</p>}
+            <p>Content: {post.content}</p>
           </div>
         ))}
       </div>
