@@ -1,6 +1,5 @@
 'use client';
 
-import { loginAction } from '@/app/actions/login-action';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -17,20 +16,32 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      await loginAction({ email, password });
-      router.push('/');
-    } catch (error) {
-      if (
-        error instanceof Error &&
-        error.message ==
+      const response = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const responseJson = await response.json();
+
+      if (!response.ok) {
+        if (
+          responseJson.errors[0].message ==
           'This user is locked due to having too many failed login attempts.'
-      ) {
-        setErrorMessage(
-          'Too many failed attempts, please try again 2 minutes later.'
-        );
-      } else if (error instanceof Error) {
-        setErrorMessage(error.message);
+        ) {
+          setErrorMessage(
+            'Too many failed attempts, please try again 2 minutes later.'
+          );
+        } else {
+          setErrorMessage(responseJson.errors[0].message);
+        }
+      } else {
+        router.push('/');
       }
+    } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
