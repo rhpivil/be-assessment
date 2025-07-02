@@ -16,7 +16,7 @@ export default async function HomePage() {
 
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`;
 
-  const response = await fetch(`${process.env.BASE_URL}/api/posts`);
+  const response = await fetch(`https://blog-assessment-dun.vercel.app/api/posts`);
   const posts = await response.json();
 
   return (
