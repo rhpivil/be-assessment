@@ -59,7 +59,7 @@ export default async function HomePage() {
         {user && <PostForm />}
 
         <h2 className="center-header">Blog Post List</h2>
-        {posts.docs.map((post) => (
+        {posts.docs.map((post: any) => (
           <div key={post.id}>
             <p>Title: {post.title}</p>
             {post.author && <p>Author: {post.author}</p>}
