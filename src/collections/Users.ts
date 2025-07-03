@@ -19,7 +19,6 @@ export const Users: CollectionConfig = {
           },
         };
       }
-        
       return false;
     },
   },
@@ -30,16 +29,6 @@ export const Users: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
-    },
-    {
-      name: 'role',
-      type: 'select',
-      options: [
-        { label: 'admin', value: 'admin' },
-        { label: 'user', value: 'user' },
-      ],
-      required: true,
-      defaultValue: 'user',
     },
   ],
 };
