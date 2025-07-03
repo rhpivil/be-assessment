@@ -16,8 +16,11 @@ export default async function HomePage() {
 
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`;
 
-  const response = await fetch(`https://blog-assessment-dun.vercel.app/api/posts`);
-  const posts = await response.json();
+  const posts = await payload.find({
+    collection: 'posts',
+    user,
+    overrideAccess: false,
+  });
 
   return (
     <div className="home">
@@ -60,9 +63,9 @@ export default async function HomePage() {
 
         <h2 className="center-header">Blog Post List</h2>
         {posts.docs.map((post: any) => (
-          <div key={post.id}>
+          <div key={post.id} className="post-card">
             <p>Title: {post.title}</p>
-            {post.author && <p>Author: {post.author}</p>}
+            <p>Author: {post.author ?? '*'}</p>
             <p>Content: {post.content}</p>
           </div>
         ))}

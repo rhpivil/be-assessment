@@ -1,3 +1,4 @@
+import { isUserSelfAndAdmin } from '@/access/isUserSelfAndAdmin';
 import type { CollectionConfig } from 'payload';
 
 export const Users: CollectionConfig = {
@@ -11,16 +12,7 @@ export const Users: CollectionConfig = {
   },
   access: {
     create: () => true,
-    read: ({ req: { user } }) => {
-      if (user) {
-        return {
-          id: {
-            equals: user.id,
-          },
-        };
-      }
-      return false;
-    },
+    read: isUserSelfAndAdmin
   },
   fields: [
     // Email added by default
@@ -28,7 +20,17 @@ export const Users: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
-      required: false,
+      required: true,
+    },
+    {
+      name: 'role',
+      type: 'select',
+      options: [
+        { label: 'admin', value: 'admin' },
+        { label: 'user', value: 'user' },
+      ],
+      required: true,
+      defaultValue: 'user',
     },
   ],
 };

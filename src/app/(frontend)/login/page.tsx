@@ -37,13 +37,16 @@ export default function LoginPage() {
         } else {
           setErrorMessage(responseJson.errors[0].message);
         }
-      } else {
-        router.push('/');
+        return;
       }
+
+      router.push('/');
+      alert('Login success!')
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
+      router.refresh();
     }
   };
 
