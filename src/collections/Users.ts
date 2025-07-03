@@ -11,16 +11,6 @@ export const Users: CollectionConfig = {
   },
   access: {
     create: () => true,
-    read: ({ req: { user } }) => {
-      if (user) {
-        return {
-          id: {
-            equals: user.id,
-          },
-        };
-      }
-      return false;
-    },
   },
   fields: [
     // Email added by default
