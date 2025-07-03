@@ -1,12 +1,12 @@
-import { isUser } from '@/access/isUser';
-import { isUserOnField } from '@/access/isUserOnField';
 import type { CollectionConfig } from 'payload';
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
   access: {
     read: () => true,
-    create: isUser,
+    create: ({ req: { user } }) => {
+      return Boolean(user);
+    },
   },
   fields: [
     {
@@ -25,7 +25,9 @@ export const Posts: CollectionConfig = {
       relationTo: 'users',
       required: true,
       access: {
-        read: isUserOnField
+        read: ({ req: { user } }) => {
+          return Boolean(user);
+        },
       },
     },
   ],
@@ -47,10 +49,9 @@ export const Posts: CollectionConfig = {
           });
 
           doc.author = user.name;
-          return doc;
         }
 
-        return doc
+        return doc;
       },
     ],
   },
