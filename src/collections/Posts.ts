@@ -40,7 +40,7 @@ export const Posts: CollectionConfig = {
     ],
     afterRead: [
       async ({ req, doc }) => {
-        if (req.user) {
+        if (doc.author) {
           const user = await req.payload.findByID({
             collection: 'users',
             id: doc.author.id,
@@ -49,6 +49,8 @@ export const Posts: CollectionConfig = {
           doc.author = user.name;
           return doc;
         }
+
+        return doc
       },
     ],
   },
